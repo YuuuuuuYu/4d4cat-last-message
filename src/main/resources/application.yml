@@ -17,3 +17,5 @@ spring:
 logging:
   level:
     root: INFO
+    com.lastmessage.message: DEBUG
+    com.lastmessage.message.aspect: DEBUG

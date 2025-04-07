@@ -17,12 +17,12 @@ public class MessageLoggingAspect {
 
     // 메시지 저장 성공 후 실행
     @AfterReturning(
-            value = "execution(* com.lastmessage.message.application.MessageService.saveMessage(..)) && args(content, clientIp)",
-            argNames = "content,clientIp"
+            value = "execution(* com.lastmessage.message.application.MessageService.saveMessage(..)) && args(content, request)",
+            argNames = "content,request"
     )
-    public void afterSaveMessage(String content, String clientIp) {
-        logger.info("Message successfully saved. IP: '{}', Content: '{}'",
-                clientIp, content);
+    public void afterSaveMessage(String content, HttpServletRequest request) {
+        String clientIp = WebUtils.getClientIp(request);
+        logger.info("Message successfully saved. IP: '{}', Content: '{}'", clientIp, content);
     }
 
     // 메시지 저장 중 예외 발생 시 실행

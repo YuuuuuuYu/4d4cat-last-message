@@ -22,10 +22,10 @@
         </encoder>
     </appender>
 
-    <logger name="com.example.lastmessage" level="DEBUG" />
-    <logger name="com.example.lastmessage.aspect" level="DEBUG" />
+    <logger name="com.lastmessage.message" level="DEBUG" />
+    <logger name="com.lastmessage.aspect" level="DEBUG" />
 
-    <root level="INFO">
+    <root level="DEBUG">
         <appender-ref ref="Console" />
         <appender-ref ref="DailyRollingFile" />
     </root>
