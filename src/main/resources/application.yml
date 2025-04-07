@@ -5,12 +5,11 @@ server:
       timeout: 30m
 
 spring:
-  application:
-    name: last-message
   thymeleaf:
     prefix: classpath:/templates/
     suffix: .html
     cache: false
+
   devtools:
     restart:
       enabled: true
@@ -18,4 +17,3 @@ spring:
 logging:
   level:
     root: INFO
-    com.example.lastmessage: DEBUG

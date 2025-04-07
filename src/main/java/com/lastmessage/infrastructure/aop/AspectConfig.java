@@ -1,4 +1,4 @@
-package com.lastmessage.aop;
+package com.lastmessage.infrastructure.aop;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
