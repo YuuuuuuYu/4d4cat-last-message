@@ -1,8 +1,10 @@
 package com.lastmessage.message.application;
 
 import com.lastmessage.message.domain.Message;
+import com.lastmessage.message.domain.MessageRepository;
 import com.lastmessage.message.validator.MessageValidator;
-import jakarta.servlet.http.HttpSession;
+import com.lastmessage.util.WebUtils;
+import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -11,19 +13,23 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class MessageServiceTest {
 
     @Mock
+    private HttpServletRequest request;
+
+    @Mock
     private MessageValidator messageValidator;
 
     @Mock
-    private HttpSession session;
+    private MessageRepository messageRepository;
 
     @InjectMocks
     private MessageService messageService;
@@ -40,11 +46,14 @@ public class MessageServiceTest {
             when(messageValidator.isValid(validContent)).thenReturn(true);
 
             // When
-            messageService.saveMessage(session, validContent);
+            Message result = messageService.saveMessage(validContent, request);
 
             // Then
+            assertThat(result.getContent()).isEqualTo(validContent);
+            assertThat(result.getClientIp()).isEqualTo(WebUtils.getClientIp(request));
+
             verify(messageValidator).isValid(validContent);
-            verify(session).setAttribute(eq("lastMessage"), any(Message.class));
+            verify(messageRepository).saveMessage(any(Message.class));
         }
 
         @Test
@@ -55,11 +64,13 @@ public class MessageServiceTest {
             when(messageValidator.isValid(invalidContent)).thenReturn(false);
 
             // When
-            messageService.saveMessage(session, invalidContent);
+            Message result = messageService.saveMessage(invalidContent, request);
 
             // Then
+            assertThat(result).isNull();
+
             verify(messageValidator).isValid(invalidContent);
-            verifyNoMoreInteractions(session);
+            verifyNoMoreInteractions(messageRepository);
         }
     }
 
@@ -71,29 +82,31 @@ public class MessageServiceTest {
         @DisplayName("세션에 메시지가 있는 경우 해당 메시지를 반환")
         void getLastMessage_ExistingMessage_ShouldReturnMessage() {
             // Given
-            Message mockMessage = new Message("Existing message");
-            when(session.getAttribute("lastMessage")).thenReturn(mockMessage);
+            Message mockMessage = new Message("Existing message", "1.2.3.4");
+            when(messageRepository.getLastMessage()).thenReturn(Optional.of(mockMessage));
 
             // When
-            Message result = messageService.getLastMessage(session);
+            Message result = messageService.getLastMessage(request);
 
             // Then
-            assertEquals(mockMessage, result);
-            verify(session).getAttribute("lastMessage");
+            assertThat(result).isSameAs(mockMessage);
+
+            verify(messageRepository).getLastMessage();
         }
 
         @Test
         @DisplayName("세션에 메시지가 없는 경우 null을 반환")
         void getLastMessage_NoExistingMessage_ShouldReturnNull() {
             // Given
-            when(session.getAttribute("lastMessage")).thenReturn(null);
+            when(messageRepository.getLastMessage()).thenReturn(Optional.empty());
 
             // When
-            Message result = messageService.getLastMessage(session);
+            Message result = messageService.getLastMessage(request);
 
             // Then
-            assertNull(result);
-            verify(session).getAttribute("lastMessage");
+            assertThat(result).isNull();
+
+            verify(messageRepository).getLastMessage();
         }
     }
 }
