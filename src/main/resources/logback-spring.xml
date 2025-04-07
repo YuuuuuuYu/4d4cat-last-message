@@ -23,9 +23,8 @@
     </appender>
 
     <logger name="com.lastmessage.message" level="DEBUG" />
-    <logger name="com.lastmessage.aspect" level="DEBUG" />
 
-    <root level="DEBUG">
+    <root level="INFO">
         <appender-ref ref="Console" />
         <appender-ref ref="DailyRollingFile" />
     </root>
