@@ -1,32 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/head :: staticHead">
+<head th:replace="~{fragments/head :: staticHead}">
 </head>
 <body>
-<div class="container">
-    <h1>What's the last message?</h1>
-    <p class="description">There are no restricted words. We just hope for messages that warm the heart</p>
-
-    <div class="message-box">
-        <div th:if="${message}" class="message">
-            <p class="message-content" th:text="${message.content}"></p>
-        </div>
-        <div th:unless="${message}" class="no-message">
-            <p>No message has been left yet</p>
-        </div>
-    </div>
-
-    <div class="form-container">
-        <form th:action="@{/message}" method="post">
-            <div class="input-group">
-                <input type="text" id="content" name="content" placeholder="Enter your message" required maxlength="90">
-                <button type="submit">Send</button>
-            </div>
-            <div class="char-counter">
-                <span id="charCount">0</span>/30
-            </div>
-        </form>
-    </div>
+<div th:replace="~{fragments/body :: mainContent(${message})}">
 </div>
 </body>
 </html>
