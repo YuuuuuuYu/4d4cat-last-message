@@ -2,7 +2,6 @@ package com.lastmessage.message.presentation;
 
 import com.lastmessage.message.application.MessageService;
 import com.lastmessage.message.domain.Message;
-import com.lastmessage.util.WebUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
