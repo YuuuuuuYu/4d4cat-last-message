@@ -14,13 +14,10 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MessageService {
 
-    private static final String SESSION_MESSAGE_KEY = "lastMessage";
-
-    private final MessageValidator messageValidator;
     private final MessageRepository messageRepository;
 
     public Message saveMessage(String content, HttpServletRequest request) {
-        if (!messageValidator.isValid(content)) {
+        if (!MessageValidator.isValid(content)) {
             return null;
         }
 

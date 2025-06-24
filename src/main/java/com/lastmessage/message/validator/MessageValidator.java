@@ -1,16 +1,13 @@
 package com.lastmessage.message.validator;
 
-import org.springframework.stereotype.Component;
-
 import java.util.regex.Pattern;
 
-@Component
 public class MessageValidator {
 
     private static final Pattern VALID_CONTENT_PATTERN = Pattern.compile("^[ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9\\s]*$");
     private static final int MAX_CHAR_COUNT = 30;
 
-    public boolean isValid(String content) {
+    public static boolean isValid(String content) {
         if (content == null || content.trim().isEmpty()) {
             return false;
         }
@@ -25,7 +22,7 @@ public class MessageValidator {
         return charCount <= MAX_CHAR_COUNT;
     }
 
-    public int calculateCharCount(String text) {
+    public static int calculateCharCount(String text) {
         int count = 0;
         for (int i = 0; i < text.length(); i++) {
             char ch = text.charAt(i);

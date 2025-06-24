@@ -26,9 +26,6 @@ public class MessageServiceTest {
     private HttpServletRequest request;
 
     @Mock
-    private MessageValidator messageValidator;
-
-    @Mock
     private MessageRepository messageRepository;
 
     @InjectMocks
@@ -43,16 +40,15 @@ public class MessageServiceTest {
         void saveMessage_ValidContent_ShouldSaveToSession() {
             // Given
             String validContent = "message";
-            when(messageValidator.isValid(validContent)).thenReturn(true);
+            boolean isValid = MessageValidator.isValid(validContent);
 
             // When
             Message result = messageService.saveMessage(validContent, request);
 
             // Then
+            assertThat(isValid).isTrue();
             assertThat(result.getContent()).isEqualTo(validContent);
             assertThat(result.getClientIp()).isEqualTo(WebUtils.getClientIp(request));
-
-            verify(messageValidator).isValid(validContent);
             verify(messageRepository).saveMessage(any(Message.class));
         }
 
@@ -61,15 +57,14 @@ public class MessageServiceTest {
         void saveMessage_InvalidContent_ShouldNotSaveToSession() {
             // Given
             String invalidContent = "Invalid !@#$% message";
-            when(messageValidator.isValid(invalidContent)).thenReturn(false);
+            boolean isValid = MessageValidator.isValid(invalidContent);
 
             // When
             Message result = messageService.saveMessage(invalidContent, request);
 
             // Then
+            assertThat(isValid).isFalse();
             assertThat(result).isNull();
-
-            verify(messageValidator).isValid(invalidContent);
             verifyNoMoreInteractions(messageRepository);
         }
     }
