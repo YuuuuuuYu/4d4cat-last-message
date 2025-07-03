@@ -51,6 +51,7 @@ jobs:
         with:
           host: ${{ secrets.GABIA_IP }}
           username: ${{ secrets.GABIA_USER }}
+          password: ${{ secrets.GABIA_PASSWORD }}
           key: ${{ secrets.GABIA_KEY }}
           source: last-message.jar
           target: /home/${{ secrets.GABIA_USER }}
